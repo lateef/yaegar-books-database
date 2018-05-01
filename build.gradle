@@ -1,0 +1,34 @@
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath "org.liquibase:liquibase-gradle-plugin:1.2.4"
+        classpath 'mysql:mysql-connector-java:5.1.46'
+    }
+}
+
+apply plugin: 'java'
+apply plugin: 'org.liquibase.gradle'
+
+group 'com.yaegar.books'
+version '1.0.0-SNAPSHOT'
+
+def changeLog = "$projectDir/src/main/db/changelog/db.changelog-master.xml"
+
+task('dev') {
+    doLast {
+        println "executing dev"
+
+        liquibase {
+            activities {
+                main {
+                    changeLogFile changeLog
+                    url 'jdbc:mysql://localhost/yaegarbooksdb'
+                    username 'root'
+                    password 'password'
+                }
+            }
+        }
+    }
+}
